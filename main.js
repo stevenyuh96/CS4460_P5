@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 d3.csv('movies.csv', function (data) {
   // Variables
   var body = d3.select('body')
@@ -91,7 +91,7 @@ svg.append('g')
     //   .text(function (d) { return d.variable +
     //                        '\nReturn: ' + formatPercent(d.aror) +
     //                        '\nStd. Dev.: ' + formatPercent(d.asd) })
-=======
+
 window.onload = start;
 
 function start() {
@@ -217,7 +217,21 @@ function start() {
             }
           })
           .attr('stroke', 'black')
-          .attr('stroke-width', 1);
+          .attr('stroke-width', 1)
+          .on('mouseover', function () {
+            d3.select(this)
+              .transition()
+              .duration(500)
+              .attr('r',20)
+              .attr('stroke-width',3)
+          })
+          .on('mouseout', function () {
+            d3.select(this)
+              .transition()
+              .duration(500)
+              .attr('r',10)
+              .attr('stroke-width',1)
+          });
 
       // Create the x-axis
       svg.append('g')
@@ -382,4 +396,3 @@ function start() {
     });
 
 }
->>>>>>> Updated scatterplot
