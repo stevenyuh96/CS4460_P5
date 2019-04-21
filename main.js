@@ -474,7 +474,7 @@ function start() {
            d3.select(this)
              .transition()
              .duration(500)
-             .attr('r',10)
+             .attr('r',7)
              .attr('stroke-width',1)
             return tooltip.style("visibility", "hidden");
          })
