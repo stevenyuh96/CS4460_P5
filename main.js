@@ -3,9 +3,9 @@ window.onload = start;
 function start() {
 
   // Global variables
-  const margin = { top: 100, right: 100, bottom: 100, left: 100 }
-  const height = 1000 - (margin.top + margin.bottom)
-  const width = 1000 - (margin.left + margin.right)
+  const margin = { top: 30, right: 50, bottom: 30, left: 50 }
+  const height = 650 - (margin.top + margin.bottom)
+  const width = 650 - (margin.left + margin.right)
   const animation_duration = 1250
 
   // Global reference to the svg, not yet created
@@ -149,7 +149,7 @@ function start() {
       // add the x-axis label
       svg1.append('text')
         .attr('id', 'xAxisLabel')
-        .attr('transform','translate(720 , 793)')
+        .attr('transform','translate(420 , 580)')
         .style("font-size", "16px")
         .text('Budget (millions of dollars)');
 
@@ -458,51 +458,36 @@ function start() {
           .attr('stroke-width', 1)
           .on('mouseover', function (d) {
            d3.select(this)
+             .classed("clicked", true)
              .transition()
              .duration(500)
              .attr('r',20)
              .attr('stroke-width',3)
-             tooltip.html("Movie Name: " + d.movie_title  + "<br>Director: "
-             + d.director_name + "<br>Genre: " + d.genres + "<br>Year: " + d.title_year
-             + "<br>Country: " + d.country + "<br>Rating: " + d.content_rating + "<br>Duration: "
-             + d.duration + "mins" + "<br>Budget: " + d.budget + "USD" + "<br>Gross: " + d.gross + "USD" + "<br>Score: "
-             + d.imdb_score)
+             tooltip.html("Movie Name:  " + d.movie_title  + "<br>Director:  "
+             + d.director_name + "<br>Genre:  " + d.genres + "  " + "<br>Year:  " + d.title_year
+             + "<br>Country:  " + d.country + "<br>Rating:  " + d.content_rating + "<br>Duration:  "
+             + d.duration + " mins " + "<br>Budget:  $" + d.budget/1000000 + " million" + "<br>Gross:  $" + d.gross/1000000 + " million"
+             + "<br>Score:  " + d.imdb_score)
 
             return tooltip.style("visibility", "visible");
          })
          .on('mouseout', function () {
            d3.select(this)
+             .classed("clicked", false)
              .transition()
              .duration(500)
              .attr('r',7)
              .attr('stroke-width',1)
             return tooltip.style("visibility", "hidden");
          })
-        // .on("mouseover", function(){return tooltip.style("visibility", "visible");})
-	        .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-	        // .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-          .on("click", function(d) {
-            var clickedID = d.id
+	       .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
 
-            var clicked = d3.selectAll(".clicked")
-
-            clicked.each(function(d) {
-                if (d.id != clickedID) {
-                    d3.select("#dot-" + d.id)
-                        .classed("clicked", false);
-                }
-            })
-
-            d3.select("#dot-" +d.id)
-                .classed("clicked", true);
-
-        })
 
       d3.selectAll('circle')
           .transition()
           .duration(animation_duration)
           .delay(function (d,i) {
-            return i
+            return i/5
           })
           .attr('cx' , function (d) {
             return xScale(d[xVariable])
@@ -510,7 +495,7 @@ function start() {
           .transition()
           .duration(animation_duration)
           .delay(function (d,i) {
-            return i
+            return i/5
           })
           .attr('cy' , function (d) {
             return yScale(d[yVariable])
@@ -522,7 +507,7 @@ function start() {
           .transition()
           .duration(animation_duration)
           .delay(function (d,i) {
-            return i
+            return i/5
           })
           .attr('cx' , function (d) {
             return xScale(d[xVariable])
@@ -530,7 +515,7 @@ function start() {
           .transition()
           .duration(animation_duration)
           .delay(function (d,i) {
-            return i
+            return i/5
           })
           .attr('cy' , function (d) {
             return yScale(d[yVariable])
@@ -567,7 +552,8 @@ function start() {
             d3.select('#xAxis')
               .transition()
               .duration(animation_duration)
-              .call(xAxis)
+              .call(xAxis
+                .tickFormat(function(d) { return d }) )
         }
 
         d3.select('#xAxisLabel')
@@ -592,7 +578,7 @@ function start() {
           .transition()
           .duration(animation_duration)
           .delay(function (d,i) {
-            return i
+            return i/5
           })
           .attr('cx' , function (d) {
             return xScale(d[xVariable])
@@ -626,7 +612,8 @@ function start() {
             d3.select('#yAxis')
               .transition()
               .duration(animation_duration)
-              .call(yAxis)
+              .call(yAxis
+                .tickFormat(function(d) { return d }) )
         }
 
         d3.select('#yAxisLabel') // change the xAxisLabel
@@ -652,7 +639,7 @@ function start() {
           .transition()
           .duration(animation_duration)
           .delay(function (d,i) {
-            return i
+            return i/5
           })
           .attr('cy' , function (d) {
             return yScale(d[yVariable])
