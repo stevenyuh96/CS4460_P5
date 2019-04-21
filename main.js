@@ -187,6 +187,7 @@ function start() {
       chart2.append('br')
       chart2.append('br')
 
+
       var spanFilters = chart2.append('span')
         .text('Enter/select filters for the data below')
 
@@ -402,6 +403,15 @@ function start() {
       filter_data()
       updateScalesFromData()
 
+      var tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .text("tooltip");
+
       var currentCircles = svg1.selectAll('.circle')
         .data(filteredData, d=> d.id);
 
@@ -419,7 +429,7 @@ function start() {
       // on the screen
       var enter = currentCircles.enter()
         .append("g")
-        .attr("class", "circle");
+        .attr("class", "circle")
 
       // appends a circle to the g element
       enter
@@ -446,6 +456,31 @@ function start() {
           })
           .attr('stroke', 'black')
           .attr('stroke-width', 1)
+          .on('mouseover', function (d) {
+           d3.select(this)
+             .transition()
+             .duration(500)
+             .attr('r',20)
+             .attr('stroke-width',3)
+             tooltip.html("Movie Name: " + d.movie_title  + "<br>Director: "
+             + d.director_name + "<br>Genre: " + d.genres + "<br>Year: " + d.title_year
+             + "<br>Country: " + d.country + "<br>Rating: " + d.content_rating + "<br>Duration: "
+             + d.duration + "mins" + "<br>Budget: " + d.budget + "USD" + "<br>Gross: " + d.gross + "USD" + "<br>Score: "
+             + d.imdb_score)
+
+            return tooltip.style("visibility", "visible");
+         })
+         .on('mouseout', function () {
+           d3.select(this)
+             .transition()
+             .duration(500)
+             .attr('r',10)
+             .attr('stroke-width',1)
+            return tooltip.style("visibility", "hidden");
+         })
+        // .on("mouseover", function(){return tooltip.style("visibility", "visible");})
+	        .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	        // .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
           .on("click", function(d) {
             var clickedID = d.id
 
@@ -461,16 +496,6 @@ function start() {
             d3.select("#dot-" +d.id)
                 .classed("clicked", true);
 
-            document.getElementById('title').textContent = d.movie_title
-            document.getElementById('director').textContent = d.director_name
-            document.getElementById('genre').textContent = d.genres
-            document.getElementById('year').textContent = d.title_year
-            document.getElementById('country').textContent = d.country
-            document.getElementById('rating').textContent = d.content_rating
-            document.getElementById('duration').textContent = d.duration
-            document.getElementById('budget').textContent = "$" + d.budget/1000000
-            document.getElementById('gross').textContent = "$" + d.gross/1000000
-            document.getElementById('score').textContent = d.imdb_score
         })
 
       d3.selectAll('circle')
@@ -558,7 +583,7 @@ function start() {
             } else if (xVariable === "num_voted_users") {
               return "Number of IMBD Ratings Received"
             } else {
-              return "IMBD Score"
+              return "IMDB Score"
             }
           })
 
@@ -617,7 +642,7 @@ function start() {
             } else if (yVariable === "num_voted_users") {
               return "Number of IMBD Ratings Received"
             } else {
-              return "IMBD Score"
+              return "IMDB Score"
             }
           })
 
